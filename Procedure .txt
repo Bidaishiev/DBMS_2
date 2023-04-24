@@ -1,0 +1,33 @@
+create or replace PROCEDURE raise_price(
+publisher_name IN games.publisher%TYPE,
+raise_procent IN NUMBER
+) AS
+upd_affected NUMBER;
+BEGIN
+UPDATE Games
+SET price = price + price * (raise_procent / 100)
+WHERE publisher = publisher_name;
+IF sql%notfound THEN
+dbms_output.put_line('There is no such publisher!');
+ELSEIF sql%found THEN
+upd_affected := SQL%ROWCOUNT;
+dbms_output.put_line('The prices of ' || upd_affected || ' games have been updated.');
+END IF;
+END;
+
+
+create or replace PROCEDURE game_statistics(game_name_stat IN games.game_name%TYPE) AS
+num_of_pur NUMBER;
+price games.price%TYPE;
+total_money NUMBER;
+BEGIN
+    SELECT g.price, count(p.steamID) INTO price, num_of_pur FROM Games g 
+    JOIN Purchases p ON g.Game_Name = p.Game_Name
+    WHERE g.Game_Name = game_name_stat
+    GROUP BY g.price, g.Game_Name;
+
+    total_money := num_of_pur * price;
+    DBMS_OUTPUT.PUT_LINE('Statistics for "' || game_name_stat || '" game');
+    DBMS_OUTPUT.PUT_LINE('Number of Purchases: ' || num_of_pur);
+    DBMS_OUTPUT.PUT_LINE('Total money earned: $' || total_money);
+END;

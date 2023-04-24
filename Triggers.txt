@@ -1,0 +1,8 @@
+create or replace TRIGGER num_of_waiting_games
+BEFORE INSERT ON wish_list FOR EACH ROW
+DECLARE
+num_of_curr_rows NUMBER;
+BEGIN
+SELECT COUNT(*) INTO num_of_curr_rows FROM wish_list where steamID = :NEW.steamID;
+DBMS_OUTPUT.PUT_LINE('The number of games you wish to play: ' || num_of_curr_rows);
+END;

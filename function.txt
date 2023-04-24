@@ -1,0 +1,7 @@
+CREATE OR REPLACE FUNCTION num_of_records(table_name IN VARCHAR2)
+RETURN NUMBER IS 
+   total_records NUMBER := 0; 
+BEGIN 
+   EXECUTE IMMEDIATE 'SELECT COUNT(*) FROM ' || table_name INTO total_records; 
+   RETURN total_records; 
+END;

@@ -1,0 +1,21 @@
+create or replace procedure add_special_offer(
+prom_name IN special_offers.Promotion_name%TYPE,
+s_date IN special_offers.START_DATE%TYPE,
+e_date IN special_offers.END_DATE%TYPE,
+game_name IN special_offers.GAME_NAME%TYPE,
+disc_amount IN special_offers.DISCOUNT_AMOUNT%TYPE) AS
+prom_name_exc EXCEPTION;
+begin
+IF length(prom_name) < 5 THEN
+RAISE prom_name_exc;
+ELSE
+INSERT INTO Special_offers VALUES(prom_name, s_date, e_date, game_name, disc_amount);
+dbms_output.put_line('NEW Special Offer "' || prom_name || '" added! ');
+dbms_output.put_line('The ' || disc_amount || '% discount is valid for the "' || game_name || '" game between ' || s_date || ' and ' || e_date);
+END IF;
+EXCEPTION
+WHEN prom_name_exc THEN
+dbms_output.put_line('The Promotion Name is too short! It must be greater than 5. ');
+WHEN others THEN
+dbms_output.put_line('Error!');
+end;
